@@ -1,0 +1,7 @@
+-cp src
+-lib heaps
+-lib domkit
+-lib seedyrng
+-js docs/voronoi.js
+-main Main
+-debug
