@@ -213,7 +213,7 @@ class Main extends hxd.App {
 
 		// Add text credits
 		final credits = new h2d.Text(hxd.res.DefaultFont.get(), bl_corner);
-		credits.text = "Made by Ashley Smith - https://aas.sh/";
+		credits.text = "Made by Ashley Rose - https://aas.sh/";
 
 		// TOP RIGHT UI
 

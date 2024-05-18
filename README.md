@@ -1,4 +1,4 @@
-# Ashley Smith - Hexagonal Voronoi Terrain Generator
+# Ashley Rose - Hexagonal Voronoi Terrain Generator
 
 ![Preview of project](docs/preview/1.png)
 

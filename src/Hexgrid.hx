@@ -37,10 +37,10 @@ class HexGrid extends h3d.prim.Polygon {
 
     // Construct a new HexGrid
 	public function new(
-        radius : Int, 
-        tileSize : Float, 
-        tilePadding : Float, 
-        tileHeightMultiplier : Float, 
+        radius : Int,
+        tileSize : Float,
+        tilePadding : Float,
+        tileHeightMultiplier : Float,
         minHeight : Int = 1,
         maxHeight : Int = 2,
         voronoi : Bool = true,
@@ -71,14 +71,14 @@ class HexGrid extends h3d.prim.Polygon {
                 // Make sure tiles adhere to axial laws to form large hexagon
                 if (q + r >= -radius && q + r <= radius) {
 
-                    // Generate tile at axial 
+                    // Generate tile at axial
                     final pos = new Axial(q, r);
                     final height = random.randomInt(minHeight, maxHeight);
                     final tile = new Tile(
-                        pos, 
-                        height, 
-                        tileSize, 
-                        tilePadding, 
+                        pos,
+                        height,
+                        tileSize,
+                        tilePadding,
                         tileHeightMultiplier,
                         random);
                     tiles.push(tile);
@@ -108,7 +108,7 @@ class HexGrid extends h3d.prim.Polygon {
                 final prevTile = getTileAt(Axial.add(tile.pos, prevDir));
                 final nextTile = getTileAt(Axial.add(tile.pos, nextDir));
 
-                // Determine if we need to reposition corner for feature points 
+                // Determine if we need to reposition corner for feature points
                 if (voronoi || smoothen) {
 
                     // // Separate variable for smoothing Z value based on height
@@ -149,21 +149,21 @@ class HexGrid extends h3d.prim.Polygon {
                             tile.featurePoint
                                 .add(prevTile.featurePoint)
                                 .add(nextTile.featurePoint)
-                                .multiply(1. / 3.);
+                                .scaled(1. / 3.);
                         }
                         // Just previous tile valid - 2 way midpoint
                         else {
 
                             // Only smooth if prev height within parameters
                             if (smoothen && Math.abs(prevTile.height - tile.height) <= smoothRange) {
-                                smoothedZ = (tile.height + prevTile.height) * 
+                                smoothedZ = (tile.height + prevTile.height) *
                                     tileHeightMultiplier * 0.5;
                             }
 
                             // Find XY midpoint of tile and previous tile
                             tile.featurePoint
                                 .add(prevTile.featurePoint)
-                                .multiply(0.5);
+                                .scaled(0.5);
                         }
                     }
                     else {
@@ -179,13 +179,13 @@ class HexGrid extends h3d.prim.Polygon {
                             // Find XY midpoint of tile and next tile
                             tile.featurePoint
                                 .add(nextTile.featurePoint)
-                                .multiply(0.5);
+                                .scaled(0.5);
                         }
                         // No neighbours - do whatever
                         else {
                             final result = tile.featurePoint
                                 .add(tile.corners[i])
-                                .multiply(0.5);
+                                .scaled(0.5);
                             smoothedZ = result.z;
                             result;
                         }
@@ -199,7 +199,7 @@ class HexGrid extends h3d.prim.Polygon {
                             final z = midpoint.z;
                             var toCenter = tile.center.sub(midpoint);
                             toCenter.normalize();
-                            toCenter = toCenter.multiply(tilePadding);
+                            toCenter = toCenter.scaled(tilePadding);
                             midpoint = midpoint.add(toCenter);
                             midpoint.z = z;
                         }
@@ -293,9 +293,9 @@ class Tile {
 	public final corners : Array<Vec3>;
 
     public function new (
-        pos : Axial, 
-        height : Int, 
-        size : Float, 
+        pos : Axial,
+        height : Int,
+        size : Float,
         padding : Float,
         heightMultiplier : Float,
         random : Random) {
@@ -310,8 +310,8 @@ class Tile {
         // Calculate perfect center of hexagon
         final width = Math.sqrt(3) * (size + padding);
         center = new Vec3(
-            (pos.q * width ) + (pos.r * width * 0.5), 
-            (pos.r * (size + padding) * (3 / 2)), 
+            (pos.q * width ) + (pos.r * width * 0.5),
+            (pos.r * (size + padding) * (3 / 2)),
             height * heightMultiplier);
 
         // Generate corners of a regular hexagon
@@ -319,7 +319,7 @@ class Tile {
             final angleDeg = 60 * i - 30;
             final angleRad = Math.PI / 180.0 * angleDeg;
             new Vec3(center.x + size * Math.cos(angleRad),
-                     center.y + size * Math.sin(angleRad), 
+                     center.y + size * Math.sin(angleRad),
                      height * heightMultiplier);
         }];
 
@@ -333,8 +333,8 @@ class Tile {
         toNext.normalize();
 
         // Randomly select a feature point within the rhombus (and hexagon)
-        final i = toCenter.multiply(random.random() * size);
-        final j = toNext.multiply(random.random() * size);
+        final i = toCenter.scaled(random.random() * size);
+        final j = toNext.scaled(random.random() * size);
         featurePoint = corner.add(i).add(j);
     }
 }
